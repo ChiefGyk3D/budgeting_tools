@@ -75,7 +75,8 @@ The scripts require Python's built-in modules argparse and datetime.
 ## Limitations
 
 These are simple scripts for personal use and should not be relied upon for financial advice. They do not account for taxes or any changes in your income or investment over time. Always consult with a financial advisor for professional guidance.
-Contributing
+
+## Contributing
 
 This is a simple project and not actively maintained, but contributions are welcome. Please open an issue to discuss any changes or improvements.
 

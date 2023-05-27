@@ -86,6 +86,28 @@ Replace X with your savings goal, Y with your current savings, and Z with your m
 
 Remember that this script doesn't take into account interest earned on your savings, or any changes in your monthly contributions over time.
 
+### Budget Planner
+
+This script allows you to plan your monthly budget by specifying the amount you aim to spend in various categories.
+
+Usage:
+
+```
+python budget_planner.py --category "category name" --amount X
+```
+
+Replace "category name" with the name of the budget category (e.g., groceries, rent, utilities, etc.), and X with the amount you plan to spend in that category. Run this command for each category to add it to your budget. The budget is saved in a file named budget.txt by default.
+
+You can also specify a different file to save your budget:
+```
+python budget_planner.py --category "category name" --amount X --file "file name"
+```
+
+Replace "file name" with the desired name for the budget file.
+
+Please note that this script currently does not have the ability to modify an existing budget. If you need to change a budget, you will have to recreate the entire budget file.
+
+
 ## Dependencies
 
 The scripts require Python's built-in modules argparse, calendar, and datetime.

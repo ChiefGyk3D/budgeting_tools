@@ -14,7 +14,15 @@ Usage:
 python paycheck_calculator.py --pay-date YYYY-MM-DD
 ```
 
-Replace YYYY-MM-DD with the date of your first paycheck in the format of Year-Month-Day.
+Replace YYYY-MM-DD with the date of the first payday of the year.
+
+This script can also output all the pay dates for the entire year to a CSV file:
+
+```
+python paycheck_calculator.py --pay-date YYYY-MM-DD --output file_name.csv
+```
+
+Replace filename.csv with the desired name for the output CSV file.
 
 ### Investment Calculator
 
@@ -35,9 +43,10 @@ This script calculates how much you need to save each month to reach a specified
 Usage:
 
 ```
-python3 retirement_planner.py --current-age 31 --retirement-age 65 --current-savings 15000 --retirement-savings 1000000 --annual-return 7
+python3 retirement_planner.py --current-age x --retirement-age y --current-savings z --retirement-savings s --annual-return r
 ```
-This command will calculate how much you need to save each month, starting at age 31 with $15,000 already saved, to have $1,000,000 by the time you retire at age 65, assuming an annual return of 7%.
+
+Replace X with your current age, Y with your desired retirement age, Z with your current savings amount, S with your desired savings amount at retirement, and R with the estimated annual return rate as a percentage.
 
 ### Debt Calculator
 
@@ -46,10 +55,22 @@ This script calculates the time to pay off a debt given the principal, interest 
 Usage:
 
 ```
-python3 debt_calculator.py --principal 5000 --interest-rate 5 --monthly-payment 200
+python debt_calculator.py --debt X --monthly-payment Y --interest-rate R
 ```
 
-This command will calculate how long it will take to pay off a $5,000 debt with a 5% annual interest rate, making $200 payments each month.
+Replace X with the total debt amount, Y with the amount you can pay monthly, and R with the annual interest rate as a percentage.
+
+### Expense Tracker
+
+This script allows you to record your expenses, with the option to mark an expense as recurring.
+
+Usage:
+
+```
+python expense_tracker.py --amount X --description "description" [--recurring]
+```
+
+Replace X with the expense amount and description with a brief description of the expense. Add --recurring at the end if the expense is a recurring one.
 
 ### Savings Goal Tracker
 
@@ -58,19 +79,16 @@ This script calculates how much money you would need to save per month to meet y
 Usage:
 
 ```
-python3 savings_goal_tracker.py --goal 10000 --current-savings 2000 --monthly-contribution 500
+python3 savings_goal_tracker.py --goal X --current-savings Y --monthly-contribution Z
 ```
 
-This command will calculate how many months it will take to reach a savings goal of $10,000, starting with $2,000 and saving $500 per month.
+Replace X with your savings goal, Y with your current savings, and Z with your monthly contribution. This command will calculate how many months it will take to reach your savings goal.
 
 Remember that this script doesn't take into account interest earned on your savings, or any changes in your monthly contributions over time.
 
-### Budget Planner
-
-
 ## Dependencies
 
-The scripts require Python's built-in modules argparse and datetime.
+The scripts require Python's built-in modules argparse, calendar, and datetime.
 
 ## Limitations
 

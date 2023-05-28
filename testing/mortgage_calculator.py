@@ -1,4 +1,3 @@
-
 import argparse
 import datetime
 import math
@@ -9,19 +8,41 @@ from dateutil.relativedelta import relativedelta
 def calculate_interest_and_payments(principal, monthly_interest_rate, payment_amount, extra_payment):
     total_interest = 0
     number_of_payments = 0
+    last_payment_amount = 0
     while principal > 0:
         interest_payment = principal * monthly_interest_rate
         principal_payment = payment_amount - interest_payment
         principal -= principal_payment + extra_payment
-
         if principal < 0:
             principal_payment += principal
             extra_payment += principal
             principal = 0
-
+        last_payment_amount = principal_payment + interest_payment + extra_payment
         total_interest += interest_payment
         number_of_payments += 1
-    return total_interest, number_of_payments
+    return total_interest, number_of_payments, last_payment_amount
+
+
+# Calculate payoff date
+def calculate_payoff_date(start_date, remaining_principal, monthly_interest_rate, payment_amount, extra_payment, payments_per_year, biweekly):
+    i = 0
+    while remaining_principal > 0:
+        i += 1
+        if biweekly:
+            payment_date = start_date + datetime.timedelta(weeks=2*(i-1))
+        else:
+            year = start_date.year + ((start_date.month - 1 + i) // 12)
+            month = (start_date.month - 1 + i) % 12 + 1
+            day = start_date.day
+            payment_date = datetime.date(year, month, day)
+        interest_payment = remaining_principal * monthly_interest_rate
+        principal_payment = payment_amount - interest_payment
+        remaining_principal -= principal_payment + extra_payment
+        if remaining_principal < 0:
+            remaining_principal = 0
+    last_payment_amount = principal_payment + interest_payment + extra_payment
+    payment_date -= datetime.timedelta(days=((payment_amount - last_payment_amount) / payment_amount)*30)
+    return payment_date
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser()
@@ -67,12 +88,12 @@ principal_paid = original_principal - remaining_principal
 interest_paid_so_far = payments_made * payment_amount - principal_paid
 
 # Calculate total interest and number of payments for the original loan terms, and subtract the payments already made
-original_total_interest, original_number_of_payments = calculate_interest_and_payments(original_principal, monthly_interest_rate, payment_amount, 0)
+original_total_interest, original_number_of_payments, _ = calculate_interest_and_payments(original_principal, monthly_interest_rate, payment_amount, 0)
 original_total_interest -= interest_paid_so_far
 original_number_of_payments -= payments_made
 
 # Calculate total interest and number of payments for the adjusted loan terms, and subtract the payments already made
-adjusted_total_interest, adjusted_number_of_payments = calculate_interest_and_payments(remaining_principal, monthly_interest_rate, payment_amount, extra_payment)
+adjusted_total_interest, adjusted_number_of_payments, _ = calculate_interest_and_payments(remaining_principal, monthly_interest_rate, payment_amount, extra_payment)
 adjusted_total_interest -= interest_paid_so_far
 adjusted_number_of_payments -= payments_made
 
@@ -87,25 +108,6 @@ annual_interest_rate = args.interest_rate / 100  # Convert to a decimal
 term_years = args.term
 extra_payment = args.extra_payment
 
-# Calculate payoff date
-def calculate_payoff_date(start_date, remaining_principal, monthly_interest_rate, payment_amount, extra_payment, payments_per_year, biweekly):
-    i = 0
-    while remaining_principal > 0:
-        i += 1
-        if biweekly:
-            payment_date = start_date + datetime.timedelta(weeks=2*(i-1))
-        else:
-            year = start_date.year + ((start_date.month - 1 + i) // 12)
-            month = (start_date.month - 1 + i) % 12 + 1
-            day = start_date.day
-            payment_date = datetime.date(year, month, day)
-        interest_payment = remaining_principal * monthly_interest_rate
-        principal_payment = payment_amount - interest_payment
-        remaining_principal -= principal_payment + extra_payment
-        if remaining_principal < 0:
-            remaining_principal = 0
-    return payment_date
-
 # Calculate the number of payments and the payment amount
 if args.biweekly:
     payments_per_year = 26
@@ -115,19 +117,15 @@ total_payments = term_years * payments_per_year
 monthly_interest_rate = annual_interest_rate / payments_per_year
 payment_amount = (original_principal * monthly_interest_rate) / (1 - (1 + monthly_interest_rate) ** -total_payments)
 
-# Calculate total interest and number of payments for the original loan terms, and subtract the payments already made
-original_total_interest, original_number_of_payments = calculate_interest_and_payments(original_principal, monthly_interest_rate, payment_amount, 0)
-original_total_interest -= interest_paid_so_far
-original_number_of_payments -= payments_made
+# Calculate total interest and number of future payments for the original loan terms
+future_original_total_interest, future_original_number_of_payments, _ = calculate_interest_and_payments(remaining_principal, monthly_interest_rate, payment_amount, 0)
 
-# Calculate total interest and number of payments for the adjusted loan terms, and subtract the payments already made
-adjusted_total_interest, adjusted_number_of_payments = calculate_interest_and_payments(remaining_principal, monthly_interest_rate, payment_amount, extra_payment)
-adjusted_total_interest -= interest_paid_so_far
-adjusted_number_of_payments -= payments_made
+# Calculate total interest and number of future payments for the adjusted loan terms
+future_adjusted_total_interest, future_adjusted_number_of_payments, _ = calculate_interest_and_payments(remaining_principal, monthly_interest_rate, payment_amount, extra_payment)
 
 # Calculate the interest and number of payments saved
-interest_saved = original_total_interest - adjusted_total_interest
-payments_saved = original_number_of_payments - adjusted_number_of_payments
+interest_saved = future_original_total_interest - future_adjusted_total_interest
+payments_saved = future_original_number_of_payments - future_adjusted_number_of_payments
 
 # Calculate the expected end date of the mortgage at the time of loan origination
 expected_end_date = start_date + relativedelta(years=term_years)
@@ -135,21 +133,21 @@ expected_end_date = start_date + relativedelta(years=term_years)
 # Initialize a list to store the payment schedule
 payment_schedule = []
 
+from dateutil.relativedelta import relativedelta
+
 # Calculate the payment schedule
+payment_date = start_date
 for i in range(1, total_payments + 1):
     # Calculate the payment date
     if args.biweekly:
-        payment_date = start_date + datetime.timedelta(weeks=2*(i-1))
+        payment_date += relativedelta(weeks=+2)
     else:
-        year = start_date.year + ((start_date.month - 1 + i) // 12)
-        month = (start_date.month - 1 + i) % 12 + 1
-        day = start_date.day
-        payment_date = datetime.date(year, month, day)
+        payment_date += relativedelta(months=+1)
 
     interest_payment = remaining_principal * monthly_interest_rate
     principal_payment = payment_amount - interest_payment
     remaining_principal -= principal_payment + extra_payment
-    payoff_date = calculate_payoff_date(start_date, remaining_principal, monthly_interest_rate, payment_amount, extra_payment, payments_per_year, args.biweekly)
+    payoff_date = calculate_payoff_date(start_date, remaining_principal, monthly_interest_rate, payment_amount, extra_payment, payments_per_year, payments_made, args.biweekly)
 
     if remaining_principal < 0:
         principal_payment += remaining_principal
@@ -175,8 +173,8 @@ for i in range(1, total_payments + 1):
         print(f"Extra Payment: ${payment_schedule[-1]['Extra Payment']:.2f}")
         print(f"Remaining Principal: ${payment_schedule[-1]['Remaining Principal']:.2f}")
         print(f"Estimated Payoff Date: {payoff_date}")
-        #print(f"Original Total Interest: {original_total_interest}, Adjusted Total Interest: {adjusted_total_interest}")
-        #print(f"Original Number of Payments: {original_number_of_payments}, Adjusted Number of Payments: {adjusted_number_of_payments}")
+        print(f"Original Total Interest: {original_total_interest}, Adjusted Total Interest: {adjusted_total_interest}")
+        print(f"Original Number of Payments: {original_number_of_payments}, Adjusted Number of Payments: {adjusted_number_of_payments}")
         print(f"Total Interest Saved: ${interest_saved:.2f}")
         print(f"Number of Payments Saved: {payments_saved}")
         break

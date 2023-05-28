@@ -43,8 +43,11 @@ for i in range(1, total_payments + 1):
     if args.biweekly:
         payment_date = start_date + datetime.timedelta(weeks=2*(i-1))
     else:
-        payment_date = (start_date.year + ((start_date.month - 1 + i) // 12), (start_date.month - 1 + i) % 12 + 1, start_date.day)
-    
+        year = start_date.year + ((start_date.month - 1 + i) // 12)
+        month = (start_date.month - 1 + i) % 12 + 1
+        day = start_date.day
+        payment_date = datetime.date(year, month, day)
+
     interest_payment = remaining_principal * monthly_interest_rate
     principal_payment = payment_amount - interest_payment
     remaining_principal -= principal_payment + extra_payment

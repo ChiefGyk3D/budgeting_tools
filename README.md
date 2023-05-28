@@ -107,6 +107,16 @@ Replace "file name" with the desired name for the budget file.
 
 Please note that this script currently does not have the ability to modify an existing budget. If you need to change a budget, you will have to recreate the entire budget file.
 
+### Mortgage Calculator
+
+The Mortgage Calculator script generates a payment schedule for a loan, assuming either monthly or bi-weekly payments and allows for additional principal payments to be made each period. It can output the payment schedule to a CSV file.
+
+Usage:
+
+```
+python mortgage_calculator.py --start-date YYYY-MM-DD --remaining-principal PRINCIPAL --original-principal ORIGINAL --interest-rate RATE --term TERM [--extra-payment EXTRA] [--biweekly] [--output OUTPUT.csv]
+```
+Replace YYYY-MM-DD with the start date of the loan, PRINCIPAL with the remaining principal on the loan, ORIGINAL with the original principal of the loan, RATE with the annual interest rate (as a percentage), and TERM with the term of the loan in years. Optional parameters include EXTRA (extra payment made each period), --biweekly (indicates payments are made every two weeks instead of monthly), and OUTPUT.csv (CSV file to write the payment schedule to).
 
 ## Dependencies
 

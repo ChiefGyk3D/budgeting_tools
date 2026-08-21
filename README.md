@@ -291,7 +291,8 @@ without going through the CLI.
 
 ## License
 
-This repository does not currently declare a license, which means default
-copyright applies and others have no granted rights to use or modify it. If you
-intend it to be open source, add a `LICENSE` file and set `license` in
-`pyproject.toml` to match.
+[Apache License 2.0](LICENSE). Copyright 2023-2026 ChiefGyk3D.
+
+Apache 2.0 was chosen over a copyleft license so the tools can be used inside
+commercial products without obliging the user to open-source their own work. It
+also carries an explicit patent grant, which MIT does not.

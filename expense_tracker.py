@@ -1,20 +1,16 @@
-import argparse
-import csv
-import datetime
+#!/usr/bin/env python3
+"""Compatibility wrapper. The maintained entry point is `finplan`.
 
-# Parse command-line arguments
-parser = argparse.ArgumentParser()
-parser.add_argument('--amount', type=float, required=True, help='Expense amount')
-parser.add_argument('--description', type=str, required=True, help='Expense description')
-parser.add_argument('--recurring', action='store_true', help='Mark expense as recurring')
-args = parser.parse_args()
+Runs the same calculation through `finplan.commands`, translating the original
+flags. See finplan/legacy.py for the mapping and README.md for the new syntax.
+"""
 
-# Open the CSV file (or create it if it doesn't exist)
-with open('expenses.csv', 'a', newline='') as file:
-    writer = csv.writer(file)
-    
-    # Get the current date
-    date = datetime.datetime.now().date()
-    
-    # Write the expense data to the CSV file
-    writer.writerow([date, args.amount, args.description, args.recurring])
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from finplan.legacy import expense_tracker
+
+if __name__ == "__main__":
+    raise SystemExit(expense_tracker())

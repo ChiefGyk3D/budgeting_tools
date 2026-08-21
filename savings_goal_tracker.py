@@ -1,22 +1,16 @@
-import argparse
+#!/usr/bin/env python3
+"""Compatibility wrapper. The maintained entry point is `finplan`.
 
-# Parse command-line arguments
-parser = argparse.ArgumentParser()
-parser.add_argument('--goal', type=float, required=True, help='Savings goal')
-parser.add_argument('--current-savings', type=float, required=True, help='Current amount saved')
-parser.add_argument('--monthly-contribution', type=float, required=True, help='Amount saved each month')
-args = parser.parse_args()
+Runs the same calculation through `finplan.commands`, translating the original
+flags. See finplan/legacy.py for the mapping and README.md for the new syntax.
+"""
 
-goal = args.goal
-current_savings = args.current_savings
-monthly_contribution = args.monthly_contribution
+import os
+import sys
 
-# Calculate how many months it will take to reach the goal
-months_to_goal = (goal - current_savings) / monthly_contribution
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# If the current savings is greater than the goal, no months are needed
-if months_to_goal < 0:
-    months_to_goal = 0
+from finplan.legacy import savings_goal_tracker
 
-# Print out the number of months
-print(f'It will take approximately {round(months_to_goal)} months to reach your savings goal.')
+if __name__ == "__main__":
+    raise SystemExit(savings_goal_tracker())

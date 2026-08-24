@@ -1,33 +1,16 @@
-import argparse
+#!/usr/bin/env python3
+"""Compatibility wrapper. The maintained entry point is `finplan`.
 
-# Parse command-line arguments
-parser = argparse.ArgumentParser()
-parser.add_argument('--initial-investment', type=float, required=True, help='Initial investment amount')
-parser.add_argument('--monthly-investment', type=float, required=True, help='Amount invested each month')
-parser.add_argument('--years', type=int, required=True, help='Number of years for the investment')
-parser.add_argument('--interest-rate', type=float, required=True, help='Annual interest rate (as a percentage)')
-args = parser.parse_args()
+Runs the same calculation through `finplan.commands`, translating the original
+flags. See finplan/legacy.py for the mapping and README.md for the new syntax.
+"""
 
-initial_investment = args.initial_investment
-monthly_investment = args.monthly_investment
-years = args.years
-interest_rate = args.interest_rate / 100  # Convert interest rate from percentage to decimal
+import os
+import sys
 
-# Calculate the number of months
-months = years * 12
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# Calculate the monthly interest rate
-monthly_interest_rate = interest_rate / 12
+from finplan.legacy import investment_calculator
 
-# Calculate the future value of the initial investment
-future_value_initial_investment = initial_investment * ((1 + monthly_interest_rate) ** months)
-
-# Calculate the future value of the monthly investments
-future_value_monthly_investments = 0
-for i in range(months):
-    future_value_monthly_investments = (future_value_monthly_investments + monthly_investment) * (1 + monthly_interest_rate)
-
-# Calculate the total future value
-future_value = future_value_initial_investment + future_value_monthly_investments
-
-print(f'The future value of the investment is ${future_value:.2f}')
+if __name__ == "__main__":
+    raise SystemExit(investment_calculator())

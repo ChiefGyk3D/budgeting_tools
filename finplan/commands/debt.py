@@ -8,7 +8,8 @@ from .. import argtypes
 from ..core.amortization import LoanTerms, amortize
 from ..core.money import ZERO, fmt_money, fmt_years, money
 from ..core.rates import Frequency, periodic_rate
-from ..core.tvm import NeverAmortizes, payment as level_payment, periods_to_payoff
+from ..core.tvm import NeverAmortizes, periods_to_payoff
+from ..core.tvm import payment as level_payment
 from ..output import Report, emit
 from ._common import add_as_of, add_output_args, freq_adverb, today
 

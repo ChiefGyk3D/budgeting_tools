@@ -21,7 +21,8 @@ from typing import Dict, List, Mapping, Optional
 from .dates import add_periods
 from .money import ZERO, dec, money
 from .rates import Frequency, periodic_rate
-from .tvm import NeverAmortizes, payment as level_payment
+from .tvm import NeverAmortizes
+from .tvm import payment as level_payment
 
 #: Refuse to build a schedule longer than a century of payments.  Any input
 #: that gets this far is pathological, and an exception beats a hung process.

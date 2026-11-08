@@ -11,7 +11,7 @@ from __future__ import annotations
 from decimal import Decimal
 from typing import Optional
 
-from .money import ONE, ZERO, dec, Numeric
+from .money import ONE, ZERO, Numeric, dec
 
 
 class NeverAmortizes(ValueError):

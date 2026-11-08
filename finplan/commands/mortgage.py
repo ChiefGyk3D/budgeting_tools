@@ -5,7 +5,12 @@ from __future__ import annotations
 import argparse
 
 from .. import argtypes
-from ..core.amortization import LoanTerms, amortize, compare_payoff, interest_paid_between
+from ..core.amortization import (
+    LoanTerms,
+    amortize,
+    compare_payoff,
+    interest_paid_between,
+)
 from ..core.dates import periods_elapsed
 from ..core.money import ZERO, fmt_money, fmt_years
 from ..core.rates import Frequency

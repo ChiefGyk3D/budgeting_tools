@@ -10,7 +10,14 @@ from ..core.dates import add_periods
 from ..core.money import ZERO, dec, fmt_money, fmt_years
 from ..core.payoff import STRATEGIES, Debt, simulate
 from ..core.rates import Frequency
-from ..loaders import DataFileError, load_records, parse_amount, parse_rate, pick, require_columns
+from ..loaders import (
+    DataFileError,
+    load_records,
+    parse_amount,
+    parse_rate,
+    pick,
+    require_columns,
+)
 from ..output import Report, emit
 from ._common import add_as_of, add_output_args, today
 

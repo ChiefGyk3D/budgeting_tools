@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Dict, List, Optional, Sequence
 
-from .money import ZERO, dec, money, Numeric
+from .money import ZERO, Numeric, dec, money
 from .rates import Frequency, periodic_rate
 from .tvm import NeverAmortizes
 

@@ -17,6 +17,7 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence
 
 from .core.money import fmt_money, fmt_pct
 
+
 def is_money_column(rows: Sequence[Sequence[Any]], index: int) -> bool:
     """A column is currency when every value in it is a Decimal.
 
@@ -76,19 +77,19 @@ class Report:
         self.warnings: List[str] = []
 
     # -- building -------------------------------------------------------
-    def section(self, title: str) -> "Report":
+    def section(self, title: str) -> Report:
         self.sections.append(Section(title=title))
         return self
 
-    def add(self, label: str, value: Any, note: Optional[str] = None) -> "Report":
+    def add(self, label: str, value: Any, note: Optional[str] = None) -> Report:
         self.sections[-1].lines.append(Line(label, value, note, "text"))
         return self
 
-    def money(self, label: str, value: Any, note: Optional[str] = None) -> "Report":
+    def money(self, label: str, value: Any, note: Optional[str] = None) -> Report:
         self.sections[-1].lines.append(Line(label, value, note, "money"))
         return self
 
-    def percent(self, label: str, value: Any, note: Optional[str] = None) -> "Report":
+    def percent(self, label: str, value: Any, note: Optional[str] = None) -> Report:
         self.sections[-1].lines.append(Line(label, value, note, "percent"))
         return self
 
@@ -109,11 +110,11 @@ class Report:
         self.tables.append(table)
         return table
 
-    def note(self, text: str) -> "Report":
+    def note(self, text: str) -> Report:
         self.notes.append(text)
         return self
 
-    def warn(self, text: str) -> "Report":
+    def warn(self, text: str) -> Report:
         self.warnings.append(text)
         return self
 

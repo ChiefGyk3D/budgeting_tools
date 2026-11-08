@@ -10,7 +10,13 @@ from ..core.money import ONE, ZERO, fmt_money, fmt_years, money
 from ..core.rates import Frequency, periodic_rate
 from ..core.tvm import contribution_for_goal
 from ..output import Report, emit
-from ._common import add_as_of, add_output_args, add_rate_convention_args, freq_adverb, today
+from ._common import (
+    add_as_of,
+    add_output_args,
+    add_rate_convention_args,
+    freq_adverb,
+    today,
+)
 
 NAME = "savings"
 ALIASES = ("goal",)

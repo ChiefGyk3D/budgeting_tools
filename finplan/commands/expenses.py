@@ -203,7 +203,7 @@ def run(args) -> int:
 
     # -- report -----------------------------------------------------------
     first, last = rows[0]["date"], rows[-1]["date"]
-    months: "OrderedDict[str, Decimal]" = OrderedDict()
+    months: OrderedDict[str, Decimal] = OrderedDict()
     by_category: Dict[str, Decimal] = {}
     recurring_total = ZERO
     for row in rows:

@@ -9,7 +9,7 @@ the schedule exact.
 
 from __future__ import annotations
 
-from decimal import Decimal, ROUND_HALF_UP, getcontext
+from decimal import ROUND_HALF_UP, Decimal, getcontext
 from typing import Union
 
 Numeric = Union[int, float, str, Decimal]

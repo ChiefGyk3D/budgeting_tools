@@ -92,14 +92,14 @@ def paydays_in_window(
     return dates
 
 
-def group_by_month(dates: List[_dt.date]) -> "OrderedDict[Tuple[int, int], List[_dt.date]]":
+def group_by_month(dates: List[_dt.date]) -> OrderedDict[Tuple[int, int], List[_dt.date]]:
     """Bucket paydays by (year, month) -- not by month name.
 
     The original grouped on ``strftime('%B')``, so a window spanning a year
     boundary merged the two Januaries into one bucket and reported the wrong
     three-paycheck months.
     """
-    buckets: "OrderedDict[Tuple[int, int], List[_dt.date]]" = OrderedDict()
+    buckets: OrderedDict[Tuple[int, int], List[_dt.date]] = OrderedDict()
     for date in dates:
         buckets.setdefault((date.year, date.month), []).append(date)
     return buckets

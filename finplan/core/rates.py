@@ -12,7 +12,7 @@ from __future__ import annotations
 from decimal import Decimal
 from enum import Enum
 
-from .money import ONE, dec, Numeric
+from .money import ONE, Numeric, dec
 
 
 class Frequency(Enum):
@@ -32,7 +32,7 @@ class Frequency(Enum):
         self.per_year = per_year
 
     @classmethod
-    def parse(cls, value: "str | Frequency") -> "Frequency":
+    def parse(cls, value: str | Frequency) -> Frequency:
         if isinstance(value, cls):
             return value
         key = str(value).strip().lower().replace("-", "").replace("_", "")

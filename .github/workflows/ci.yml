@@ -1,37 +1,42 @@
+# Ruff, tests on Python 3.11-3.14, the CLI help checks and a workflow lint.
+# The jobs live in ChiefGyk3D/git-your-ship-together; this file only says what
+# is specific to budgeting_tools.
 name: CI
 
 on:
   push:
-    branches: ["**"]
+    branches: [main]
   pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
-      - name: Run tests
-        run: python -m pytest tests -q
-      - name: Check the CLI starts and every command has help
-        run: |
-          finplan --version
-          for cmd in budget expenses paychecks savings emergency-fund debt \
-                     debt-plan mortgage refinance invest retire networth; do
-            finplan "$cmd" --help > /dev/null || exit 1
-          done
-      - name: Check the legacy wrappers still run
-        run: |
-          python biweekly_pay.py --pay-date 2026-01-02 > /dev/null
-          python debt_calculator.py --principal 5400 --interest-rate 22.9 \
-            --monthly-payment 200 > /dev/null
+  ci:
+    uses: ChiefGyk3D/git-your-ship-together/.github/workflows/python-ci.yml@9d6825dd4e0e4d524fca3733f416437bbd7851e1 # v1.31.0
+    permissions:
+      contents: read
+      id-token: write   # coverage upload job; the reusable workflow requests it
+    with:
+      python-versions: '["3.11", "3.12", "3.13", "3.14"]'
+      install-command: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+      test-command: |
+        python -m pytest tests -q
+        finplan --version
+        for cmd in budget expenses paychecks savings emergency-fund debt \
+                   debt-plan mortgage refinance invest retire networth; do
+          finplan "$cmd" --help > /dev/null || exit 1
+        done
+        python biweekly_pay.py --pay-date 2026-01-02 > /dev/null
+        python debt_calculator.py --principal 5400 --interest-rate 22.9 \
+          --monthly-payment 200 > /dev/null
+      docker-build: false
+      egress-policy: block
